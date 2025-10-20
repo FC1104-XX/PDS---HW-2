@@ -7,4 +7,4 @@ def most_active(customers) -> List[str]:
 
     most_active_customers = customers[customers["YearsActive"] == customers["YearsActive"].max()]
 
-    return most_active_customers["Email"].tolist()
+    return most_active_customers["Email"].sort_values().tolist() #sorted so me and my assignment partner can compare values

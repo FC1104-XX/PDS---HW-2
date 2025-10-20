@@ -7,7 +7,7 @@ def date_handler(df) -> pd.DataFrame:
     df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"], errors="coerce")
 
     invalid = df[df["InvoiceDate"].isna()] #check if any date rows couldn't be parsed and were converted to NaT
-    if not invalid.empty:
+    if len(invalid) != 0:
         print("Some rows could not be converted to datetime:")
         print(invalid)
 

@@ -6,19 +6,23 @@ def go_sports(teams, managers) -> pd.DataFrame:
     managers = managers.copy()
 
     teams["yearID"] = pd.to_datetime(teams["yearID"], errors="coerce").dt.year
-    managers["yearID"] = pd.to_datetime(managers["yearID"], errors="coerce").dt.year
-    managers["managerID"] = managers["managerID"].str.replace(" ", "", regex=False)
+    managers["yearID"] = pd.to_numeric(managers["yearID"], errors="coerce").astype("Int64")
 
-    managers_clean = (
-        managers.sort_values(["teamID", "yearID", "W"], ascending=[True, True, False])
-        .drop_duplicates(subset=["teamID", "yearID", "managerID"])
-    )
+    managers["managerID"] = managers["managerID"].str.replace(" ", "", regex=False) #remove spaces
+
+    managers = (
+        managers.groupby(["teamID", "yearID", "managerID"], as_index=False)[["W", "L"]] #we have to do this to group the now cleaned managerIDs
+        .sum())
+    teams = teams[["teamID", "yearID", "name" ]]
+    managers = managers[["teamID", "yearID", "managerID", "W", "L"]].drop_duplicates()
 
     final_df = pd.merge(
-        teams[["teamID", "yearID", "name"]],
-        managers[["teamID", "managerID", "yearID", "W", "L"]],
+        teams,
+        managers,   
         on=["teamID", "yearID"],
         how="inner"
     )
+    final_df = final_df.sort_values(["teamID", "yearID", "managerID"])
 
-    return final_df
+    #to test: we should keep in mind a year of baseball has about 162 games, to check our answer we just had all games in a season and it seems to make sense
+    return final_df[["name", "managerID", "yearID", "W", "L"]] 

@@ -16,4 +16,3 @@ def top_twenty_countries(df) -> List[str]:
 
   return_list = [country for country in country_counts.head(20).index]
   return return_list
-

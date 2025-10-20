@@ -9,5 +9,5 @@ def most_expensive_item(df) -> str:
      df = df.sort_values(by="UnitPrice", ascending=False)
      df = df.drop_duplicates(subset="Description")
 
-     most_expensive = df.iloc[1]["Description"] #im pretty sure that the first entry is actually 60 items instead of 1 so we ignore it
+     most_expensive = df.iloc[0]["Description"]
      return most_expensive
